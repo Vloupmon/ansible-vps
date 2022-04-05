@@ -1,16 +1,4 @@
 ---
-- name: Check if caddy is installed
-  stat: path=/usr/bin/caddy
-  register: p
-
-- name: Install caddy
-  become: yes
-  shell: |
-    dnf install 'dnf-command(copr)'
-    dnf copr enable @caddy/caddy
-    dnf install caddy
-  when: p.stat.exists == False
-
 - name: Create caddy dir
   file:
     path: $HOME/caddy
@@ -21,12 +9,19 @@
     src: Caddyfile.j2
     dest: ~/caddy/Caddyfile
 
+- name: Copy caddy docker-compose
+  copy:
+    src: docker-compose.yml
+    dest: ~/caddy/docker-compose.yml
+
 - name: Check if caddy is running
-  shell: >
-    echo -n
-    $(pgrep caddy)
-  register: caddy_pid
+  shell: docker ps | grep caddy |  cut -d ' ' -f 1
+  register: caddy_id
 
 - name: Start caddy
-  shell: cd $HOME/caddy && caddy start --watch 2>/dev/null
-  when: caddy_pid.stdout == ""
+  shell: cd $HOME/caddy && docker-compose up -d
+  when: caddy_id.stdout == ""
+
+- name: Reload caddy
+  shell: docker exec -w /etc/caddy {{ caddy_id.stdout }} caddy reload
+  when: caddy_id.stdout != ""

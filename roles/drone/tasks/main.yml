@@ -5,7 +5,7 @@
     path: $HOME/drone
     state: directory
 
-- name: Copy docker-compose
+- name: Copy drone docker-compose
   copy:
     src: docker-compose.yml
     dest: $HOME/drone/docker-compose.yml
