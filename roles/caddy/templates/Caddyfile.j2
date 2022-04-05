@@ -1,0 +1,23 @@
+{
+        http_port 8080
+        https_port 4443
+}
+
+{{ hostname }} {
+        redir https://blog.{{ hostname }}{uri} permanent
+}
+
+blog.{{ hostname }} {
+        root * /var/www/html/blog/
+        file_server
+}
+
+drone.{{ hostname }} {
+        reverse_proxy 127.0.0.1:6666
+}
+
+resume.{{ hostname }} {
+        root * /var/www/html/
+        try_files {path} /resume.pdf
+        file_server
+}

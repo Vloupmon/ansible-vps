@@ -1,0 +1,30 @@
+---
+- name: Check docker is installed
+  stat: path=/usr/bin/docker
+  register: p
+
+- name: Install docker
+  become: yes
+  shell: |
+    dnf install -y dnf-utils zip unzip
+    dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+    dnf remove -y runc
+    dnf install -y docker-ce --nobest
+  when: p.stat.exists == False
+
+- name: Set user to docker group
+  shell: groupadd docker && usermod -aG docker $USER
+  when: p.stat.exists == False
+
+- name: Start docker
+  become: yes
+  shell: systemctl enable docker.service && systemctl start docker.service
+  when: p.stat.exists == False
+
+- name: Check docker-compose is installed
+  stat: path=/usr/local/bin/docker-compose
+  register: p
+
+- name: Install docker-compose
+  shell: curl -L "https://github.com/linuxserver/docker-docker-compose/releases/download/1.29.2-ls51/docker-compose-arm64" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+  when: p.stat.exists == False

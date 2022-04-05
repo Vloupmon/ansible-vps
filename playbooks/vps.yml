@@ -1,0 +1,15 @@
+---
+- name: Setup docker
+  hosts: vps
+  roles:
+    - docker
+
+- name: Setup drone
+  hosts: vps
+  roles:
+    - drone
+
+- name: Setup caddy
+  hosts: vps
+  roles:
+    - caddy

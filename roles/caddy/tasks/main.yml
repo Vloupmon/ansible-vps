@@ -1,0 +1,32 @@
+---
+- name: Check if caddy is installed
+  stat: path=/usr/bin/caddy
+  register: p
+
+- name: Install caddy
+  become: yes
+  shell: |
+    dnf install 'dnf-command(copr)'
+    dnf copr enable @caddy/caddy
+    dnf install caddy
+  when: p.stat.exists == False
+
+- name: Create caddy dir
+  file:
+    path: $HOME/caddy
+    state: directory
+
+- name: Copy caddy conf
+  template:
+    src: Caddyfile.j2
+    dest: ~/caddy/Caddyfile
+
+- name: Check if caddy is running
+  shell: >
+    echo -n
+    $(pgrep caddy)
+  register: caddy_pid
+
+- name: Start caddy
+  shell: cd $HOME/caddy && caddy start --watch 2>/dev/null
+  when: caddy_pid.stdout == ""
