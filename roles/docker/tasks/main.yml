@@ -13,7 +13,8 @@
   when: p.stat.exists == False
 
 - name: Set user to docker group
-  shell: groupadd docker && usermod -aG docker $USER
+  become: yes
+  shell: usermod -aG docker {{ ansible_user }}
   when: p.stat.exists == False
 
 - name: Start docker
@@ -26,5 +27,6 @@
   register: p
 
 - name: Install docker-compose
+  become: yes
   shell: curl -L "https://github.com/linuxserver/docker-docker-compose/releases/download/1.29.2-ls51/docker-compose-arm64" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
   when: p.stat.exists == False
