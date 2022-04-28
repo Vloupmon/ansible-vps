@@ -13,3 +13,8 @@
   hosts: vps
   roles:
     - caddy
+
+- name: Setup user for www uploads
+  hosts: vps
+  roles:
+    - uploads

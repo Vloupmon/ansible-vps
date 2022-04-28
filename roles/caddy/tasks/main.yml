@@ -34,7 +34,3 @@
 - name: Start caddy
   shell: cd $HOME/caddy && docker-compose up -d
   when: caddy_id.stdout == ""
-
-- name: Reload caddy
-  shell: docker exec -w /etc/caddy {{ caddy_id.stdout }} caddy reload
-  when: caddy_id.stdout != ""
