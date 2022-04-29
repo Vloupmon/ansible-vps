@@ -1,0 +1,37 @@
+---
+- name: Create filebrowser work dir
+  file:
+    path: $HOME/filebrowser
+    state: directory
+
+- name: Copy filebrowser docker-compose
+  copy:
+    src: docker-compose.yml
+    dest: $HOME/filebrowser/docker-compose.yml
+
+- name: Create filebrowser root dir
+  become: yes
+  file:
+    path: /filebrowser/data
+    state: directory
+
+- name: Create filebrowser database dir
+  become: yes
+  file:
+    path: /filebrowser/db
+    state: directory
+
+- name: Check if database file exists
+  become: yes
+  stat: path=/filebrowser/db/database.db
+  register: p
+
+- name: Create filebrowser database file
+  become: yes
+  file:
+    path: /filebrowser/db/database.db
+    state: touch
+  when: p.stat.exists == False
+
+- name: Start filebrowser
+  shell: cd $HOME/filebrowser && docker-compose up -d

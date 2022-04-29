@@ -18,3 +18,8 @@
   hosts: vps
   roles:
     - uploads
+
+- name: Setup filebrowser
+  hosts: vps
+  roles:
+    - filebrowser
