@@ -44,7 +44,7 @@
 
 - name: Create www dir with www_uploads user access
   become: yes
-  shell: mkdir -p /var/www/html/ && setfacl -m u:www_uploads:rwx /var/www/html
+  shell: mkdir -p /var/www/html/ && setfacl -m u:www_uploads:rw -Rd /var/www/html
 
 - name: Copy resume to www files
   become: yes

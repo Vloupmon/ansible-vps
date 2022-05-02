@@ -1,0 +1,36 @@
+---
+- name: Open firewall ports
+  become: yes
+  shell: |
+    firewall-cmd --add-port=6881/udp
+    firewall-cmd --add-port=6890-6999/tcp
+    firewall-cmd --add-masquerade
+    firewall-cmd --runtime-to-permanent
+
+- name: Create torrent work dir
+  file:
+    path: $HOME/torrent
+    state: directory
+
+- name: Copy rtorrent conf file
+  copy:
+    src: rtorrent.rc
+    dest: $HOME/torrent/rtorrent.rc
+
+- name: Copy torrent docker-compose
+  copy:
+    src: docker-compose.yml
+    dest: $HOME/torrent/docker-compose.yml
+
+- name: Create data dir
+  become: yes
+  file:
+    path: /data
+    state: directory
+
+- name: Set data dir ACL
+  become: yes
+  shell: setfacl -m u:1000:rwx -Rd /data && setfacl -m g:1000:rwx -Rd /data
+
+- name: Start rtorrent && flood
+  shell: cd $HOME/torrent && docker-compose up -d

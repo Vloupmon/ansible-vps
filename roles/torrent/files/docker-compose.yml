@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  flood:
+    container_name: flood
+    image: jesec/flood
+    user: 1000:1000
+    restart: unless-stopped
+    command: --port 3001 --allowedpath /data
+    environment:
+      HOME: /config
+    volumes:
+      - $HOME/torrent:/config
+      - /data:/data
+    ports:
+      - 127.0.0.1:3001:3001
+
+  rtorrent:
+    container_name: rtorrent
+    image: jesec/rtorrent
+    user: 1000:1000
+    restart: unless-stopped
+    environment:
+      HOME: /config
+    volumes:
+      - $HOME/torrent:/config
+      - /data:/data
+    ports:
+      - 0.0.0.0:6881:6881/udp
+      - 0.0.0.0:6890-6999:6890-6999/tcp

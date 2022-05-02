@@ -34,3 +34,7 @@
 - name: Start caddy
   shell: cd $HOME/caddy && docker-compose up -d
   when: caddy_id.stdout == ""
+
+- name: Restart caddy
+  shell: docker restart {{ caddy_id.stdout }}
+  when: caddy_id.stdout != ""

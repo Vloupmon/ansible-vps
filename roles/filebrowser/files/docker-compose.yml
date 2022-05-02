@@ -4,8 +4,9 @@ services:
     container_name: filebrowser
     image: filebrowser/filebrowser
     restart: always
+    user: 1000:1000
     volumes:
-      - /filebrowser/data:/srv
-      - /filebrowser/db/database.db:/database.db
+      - /data:/srv
+      - $HOME/filebrowser/database.db:/database.db
     ports:
       - 8888:80

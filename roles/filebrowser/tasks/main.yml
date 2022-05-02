@@ -9,27 +9,23 @@
     src: docker-compose.yml
     dest: $HOME/filebrowser/docker-compose.yml
 
-- name: Create filebrowser root dir
+- name: Create data dir
   become: yes
   file:
-    path: /filebrowser/data
+    path: /data
     state: directory
 
-- name: Create filebrowser database dir
+- name: Set data dir ACL
   become: yes
-  file:
-    path: /filebrowser/db
-    state: directory
+  shell: setfacl -m u:1000:rwx -Rd /data && setfacl -m g:1000:rwx -Rd /data
 
 - name: Check if database file exists
-  become: yes
-  stat: path=/filebrowser/db/database.db
+  stat: path=$HOME/filebrowser/database.db
   register: p
 
 - name: Create filebrowser database file
-  become: yes
   file:
-    path: /filebrowser/db/database.db
+    path: $HOME/filebrowser/database.db
     state: touch
   when: p.stat.exists == False
 

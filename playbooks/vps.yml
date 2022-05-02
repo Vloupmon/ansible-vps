@@ -23,3 +23,8 @@
   hosts: vps
   roles:
     - filebrowser
+
+- name: Setup torrent
+  hosts: vps
+  roles:
+    - torrent
