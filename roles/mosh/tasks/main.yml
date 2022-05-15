@@ -1,0 +1,20 @@
+---
+- name: Check if mosh is installed
+  stat: path=/usr/bin/mosh
+  register: p
+
+- name: Enable EPEL repo
+  become: yes
+  shell: dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+  when: p.stat.exists == False
+
+- name: Install mosh
+  become: yes
+  yum:
+    name: mosh
+    state: latest
+  when: p.stat.exists == False
+
+- name: Open firewall ports
+  become: yes
+  shell: firewall-cmd --add-port=60000-61000/udp --permanent

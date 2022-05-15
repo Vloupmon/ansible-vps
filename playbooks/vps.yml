@@ -1,7 +1,8 @@
 ---
-- name: Setup docker
+- name: Setup server
   hosts: vps
   roles:
+    - mosh
     - docker
 
 - name: Setup drone
