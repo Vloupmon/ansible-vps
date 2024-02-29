@@ -3,7 +3,8 @@
   become: yes
   shell: |
     firewall-cmd --add-port=6881/udp
-    firewall-cmd --add-port=6890-6999/tcp
+    firewall-cmd --add-port=6881/tcp
+    firewall-cmd --add-port=3001/tcp
     firewall-cmd --add-masquerade
     firewall-cmd --runtime-to-permanent
 
@@ -11,11 +12,6 @@
   file:
     path: $HOME/torrent
     state: directory
-
-- name: Copy rtorrent conf file
-  copy:
-    src: rtorrent.rc
-    dest: $HOME/torrent/rtorrent.rc
 
 - name: Copy torrent docker-compose
   copy:
@@ -32,5 +28,5 @@
   become: yes
   shell: setfacl -m u:1000:rwx -Rd /data && setfacl -m g:1000:rwx -Rd /data
 
-- name: Start rtorrent && flood
+- name: Start qbittorrent
   shell: cd $HOME/torrent && docker-compose up -d

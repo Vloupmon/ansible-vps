@@ -16,10 +16,6 @@ drone.{{ hostname }} {
         reverse_proxy 127.0.0.1:6666
 }
 
-filebrowser.{{ hostname }} {
-        reverse_proxy 127.0.0.1:8888
-}
-
 torrent.{{ hostname }} {
         reverse_proxy 127.0.0.1:3001
 }
@@ -28,4 +24,9 @@ resume.{{ hostname }} {
         root * /var/www/html/
         try_files {path} /resume.pdf
         file_server
+}
+
+files.loupmon.com {
+        root * /downloads
+        file_server browse
 }

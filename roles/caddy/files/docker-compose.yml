@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   caddy:
     image: caddy
@@ -8,4 +7,5 @@ services:
     volumes:
       - $HOME/caddy/Caddyfile:/etc/caddy/Caddyfile
       - /var/www/:/var/www
+      - /data:/downloads
     network_mode: host

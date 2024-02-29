@@ -20,11 +20,6 @@
   roles:
     - uploads
 
-- name: Setup filebrowser
-  hosts: vps
-  roles:
-    - filebrowser
-
 - name: Setup torrent
   hosts: vps
   roles:
